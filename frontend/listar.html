@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Usuarios</title>
+</head>
+
+<body>
+
+    <h1>Usuarios</h1>
+
+    <a href="crear.html">Crear Usuario</a>
+
+    <ul id="lista"></ul>
+
+    <script>
+        const API = "http://localhost:3000/usuarios";
+
+        // Cargar usuarios
+        fetch(API)
+            .then(res => res.json())
+            .then(data => {
+                const lista = document.getElementById("lista");
+
+                data.forEach((u, i) => {
+                    const li = document.createElement("li");
+
+                    li.innerHTML = `
+    ${u.nombre} (${u.edad})
+    <button onclick="editar(${i})">Editar</button>
+    <button onclick="eliminar(${i})">Eliminar</button>
+`;
+
+                    lista.appendChild(li);
+                });
+            });
+
+        // Redirigir a editar
+        function editar(id) {
+            window.location.href = "editar.html?id=" + id;
+        }
+
+
+        function eliminar(id){
+    if(confirm("¿Seguro que quieres eliminar este usuario?")){
+        fetch(API + "/" + id, {
+            method: "DELETE"
+        })
+        .then(() => {
+            alert("Usuario eliminado");
+            location.reload(); // recarga la lista
+        });
+    }
+}
+    </script>
+
+</body>
+
+</html>

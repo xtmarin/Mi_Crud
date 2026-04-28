@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Usuario</title>
+</head>
+<body>
+
+<h1>Editar Usuario</h1>
+
+<!-- Navegación -->
+<a href="listar.html">⬅ Volver a la lista</a>
+
+<br><br>
+
+<!-- Formulario -->
+<input type="text" id="nombre" placeholder="Nombre">
+<input type="number" id="edad" placeholder="Edad">
+
+<br><br>
+
+<button onclick="actualizar()">Guardar cambios</button>
+
+<script>
+const API = "http://localhost:3000/usuarios";
+
+// 🔹 Obtener ID desde la URL
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+// 🔹 Validar si viene el ID
+if (!id) {
+    alert("No se encontró ID");
+    window.location.href = "listar.html";
+}
+
+// 🔹 Cargar datos automáticamente
+fetch(API + "/" + id)
+.then(res => res.json())
+.then(data => {
+    if (data.error) {
+        alert("Usuario no encontrado");
+        window.location.href = "listar.html";
+        return;
+    }
+
+    document.getElementById("nombre").value = data.nombre;
+    document.getElementById("edad").value = data.edad;
+})
+.catch(() => {
+    alert("Error al cargar usuario");
+});
+
+// 🔹 Actualizar usuario
+function actualizar(){
+    fetch(API + "/" + id, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            nombre: document.getElementById("nombre").value,
+            edad: document.getElementById("edad").value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
+        alert("Usuario actualizado correctamente");
+        window.location.href = "listar.html";
+    })
+    .catch(() => {
+        alert("Error al actualizar");
+    });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar</title>
+</head>
+<body>
+
+<h1>Seleccionar Usuario</h1>
+
+<ul id="lista"></ul>
+
+<h2>Resultado</h2>
+<p id="resultado"></p>
+
+<script>
+const API = "http://localhost:3000/usuarios";
+
+fetch(API)
+.then(res => res.json())
+.then(data => {
+    const lista = document.getElementById("lista");
+
+    data.forEach((u, i) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <button onclick="ver(${i})">
+                ${u.nombre}
+            </button>
+        `;
+        lista.appendChild(li);
+    });
+});
+
+function ver(id){
+    fetch(API + "/" + id)
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("resultado").innerText =
+            data.nombre + " - " + data.edad;
+    });
+}
+</script>
+
+</body>
+</html>

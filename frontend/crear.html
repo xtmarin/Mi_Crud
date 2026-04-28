@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Usuario</title>
+</head>
+<body>
+
+<h1>Crear Usuario</h1>
+
+<a href="listar.html">Ver lista</a>
+
+<br><br>
+
+<form id="form">
+    <input type="text" id="nombre" placeholder="Nombre" required>
+    <input type="number" id="edad" placeholder="Edad" required>
+    <button type="submit">Guardar</button>
+</form>
+
+<script>
+const API = "http://localhost:3000/usuarios";
+
+document.getElementById("form").addEventListener("submit", e => {
+    e.preventDefault();
+
+    fetch(API, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            nombre: document.getElementById("nombre").value,
+            edad: document.getElementById("edad").value
+        })
+    })
+    .then(() => {
+        alert("Usuario creado");
+        window.location.href = "listar.html";
+    });
+});
+</script>
+
+</body>
+</html>
